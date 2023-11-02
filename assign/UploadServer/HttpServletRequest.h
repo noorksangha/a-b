@@ -1,31 +1,55 @@
-#ifndef HTTP_SERVLET_REQUEST_H
-#define HTTP_SERVLET_REQUEST_H
+#include "HttpServletResponse.h"
+#include <iostream>
+#include <sys/socket.h> 
 
-#include <string>
-#include <map>
+HttpServletResponse::HttpServletResponse() : statusCode(200), statusMessage("OK") {}
 
-class HttpServletRequest {
-public:
-    HttpServletRequest();
-    
-    // Reads the HTTP request from a given socket
-    void readFromSocket(int socket);
+void HttpServletResponse::writeToSocket(int socket) const {
+    std::string response;
+    response += "HTTP/1.1 " + std::to_string(statusCode) + " " + statusMessage + "\r\n";
+    response += "Content-Length: " + std::to_string(body.length()) + "\r\n";
+    for (const auto& header : headers) {
+        response += header.first + ": " + header.second + "\r\n";
+    }
+    response += "\r\n";
+    response += body;
 
-    // Getter methods
-    const std::string& getMethod() const;
-    const std::string& getPath() const;
-    const std::string& getHeader(const std::string& key) const;
-    const std::string& getBody() const;
+    int bytesSent = send(socket, response.c_str(), response.length(), 0);
+    if (bytesSent < 0) {
+        std::cerr << "Error writing to socket" << std::endl;
+    }
+}
+
+int HttpServletResponse::getStatusCode() const {
+    return statusCode;
+}
+
+const std::string& HttpServletResponse::getStatusMessage() const {
+    return statusMessage;
+}
+
+void HttpServletResponse::setStatusCode(int code) {
+    statusCode = code;
+}
+
+void HttpServletResponse::setStatusMessage(const std::string& message) {
+    statusMessage = message;
+}
 
 
-    // TODO: Add more methods or attributes if necessary, like query parameters parsing
+void HttpServletResponse::writeBody(const std::string& data) {
+    body += data;
+}
 
-private:
-    std::string method;                           // HTTP method (e.g., "GET", "POST")
-    std::string path;                             // Requested path (e.g., "/")
-    std::string body;                             // Request body
-    std::map<std::string, std::string> headers;   // HTTP headers
-    std::map<std::string, std::string> form_data; // Form data (key-value pairs from the body)
-};
+const std::string& HttpServletResponse::getHeader(const std::string& name) const {
+    static const std::string emptyString = "";
+    auto it = headers.find(name);
+    if (it != headers.end()) {
+        return it->second;
+    }
+    return emptyString;
+}
 
-#endif // HTTP_SERVLET_REQUEST_H
+void HttpServletResponse::setHeader(const std::string& name, const std::string& value) {
+    headers[name] = value;
+}

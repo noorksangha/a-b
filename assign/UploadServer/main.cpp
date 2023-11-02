@@ -30,7 +30,7 @@ memset(&serv_addr, 0, sizeof(serv_addr));
     listen(sockfd, 5);
     clilen = sizeof(cli_addr);
 
-    UploadServlet uploadServlet("/path/to/save/uploads");  // specify your path
+    UploadServlet uploadServlet("uploads");  // specify your path
 
     while (1) {
         newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &clilen);
@@ -44,7 +44,7 @@ memset(&serv_addr, 0, sizeof(serv_addr));
 
         request.readFromSocket(newsockfd);
 
-        if (request.getMethod() == "POST" && request.getPath() == "/upload") {
+        if (request.getMethod() == "POST" && request.getPath() == "upload") {
     uploadServlet.doPost(request, response);
 } else if (request.getMethod() == "GET" && request.getPath() == "/") {
     uploadServlet.doGet(request, response);  // Assuming you have a doGet method defined similarly to doPost in UploadServlet

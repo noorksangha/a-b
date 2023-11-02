@@ -25,9 +25,10 @@ void UploadServerThread::handleClientConnection() {
 
     // Read the incoming request from clientSocket and populate the HttpServletRequest object.
     request.readFromSocket(clientSocket);  // assuming you have a method like this
+    std::cout << "Received " << request.getMethod() << " request." << std::endl;
+    std::string method = request.getMethod();  // Assuming you have a getMethod() in HttpServletRequest
 
     // Check the type of the request and handle accordingly
-    std::string method = request.getMethod();  // Assuming you have a getMethod() in HttpServletRequest
     if (method == "GET" && request.getPath() == "/") {
         uploadServlet.doGet(request, response);
     } else if (method == "POST" && request.getPath() == "/") {

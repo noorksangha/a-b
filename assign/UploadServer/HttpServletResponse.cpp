@@ -35,10 +35,6 @@ void HttpServletResponse::setStatusCode(int code) {
 void HttpServletResponse::setStatusMessage(const std::string& message) {
     statusMessage = message;
 }
-// ... includes ...
-
-
-// ... other method implementations ...
 
 
 void HttpServletResponse::writeBody(const std::string& data) {

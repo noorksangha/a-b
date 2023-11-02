@@ -3,9 +3,13 @@
 #include <iostream>
 #include <sstream>
 
+
 HttpServletRequest::HttpServletRequest() {}
 
 void HttpServletRequest::readFromSocket(int socket) {
+std::cout << "Received HTTP request:" << std::endl;
+std::cout << "--------------------------" << std::endl;
+
     char buffer[8192]; 
     int bytesReceived = recv(socket, buffer, sizeof(buffer) - 1, 0);
 
@@ -53,6 +57,7 @@ if (pos != std::string::npos) {
 
 const std::string& HttpServletRequest::getMethod() const {
     return method;
+    
 }
 
 const std::string& HttpServletRequest::getPath() const {
