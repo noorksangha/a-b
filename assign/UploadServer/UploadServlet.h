@@ -11,9 +11,6 @@ public:
     void doGet(HttpServletRequest& request, HttpServletResponse& response);
     void doPost(HttpServletRequest& request, HttpServletResponse& response);
 
-
-    void doPost(HttpServletRequest& request, HttpServletResponse& response);
-
 private:
     std::string saveDirectory;
 
