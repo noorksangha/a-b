@@ -14,7 +14,7 @@ public:
 private:
     std::string saveDirectory;
 
-    bool saveUploadedFile(const std::string& fileName, const std::string& fileContent);
+    bool saveUploadedFile(const std::string& fileName, const std::string& fileContent, std::string& errorMsg);
 };
 
 #endif // UPLOAD_SERVLET_H
